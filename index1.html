@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>HTML + Python</title>
+</head>
+
+<body>
+
+    <h1>Comunicação com Python</h1>
+
+    <input
+        type="text"
+        id="mensagem"
+        placeholder="Digite uma mensagem"
+    >
+
+    <button onclick="enviarMensagem()">
+        Enviar para Python
+    </button>
+
+    <p id="resultado"></p>
+
+    <script>
+        async function enviarMensagem() {
+            const mensagem = document.getElementById("mensagem").value;
+
+            try {
+                const resposta = await fetch(
+                    "http://127.0.0.1:5000/receber",
+                    {
+                        method: "POST",
+
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+
+                        body: JSON.stringify({
+                            mensagem: mensagem
+                        })
+                    }
+                );
+
+                const dados = await resposta.json();
+
+                document.getElementById("resultado").textContent =
+                    dados.resposta;
+
+            } catch (erro) {
+                document.getElementById("resultado").textContent =
+                    "Não foi possível conectar ao Python.";
+            }
+        }
+    </script>
+
+</body>
+</html>
